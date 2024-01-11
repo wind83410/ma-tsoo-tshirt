@@ -1,0 +1,14 @@
+<ng-container [formGroup]="shirtSelectorForm">
+  <label for="shirt-size-{{ trackID }}">
+    <span>尺寸</span>
+    <select name="shirt-size" id="shirt-size-{{ trackID }}" formControlName="sizePrice">
+      @for (item of SHIRT_SIZE_PRICES | keyvalue: noobCompareFunction; track $index) {
+      <option [value]="item.value">{{ item.key }}</option>
+      }
+    </select>
+  </label>
+  <label for="quantity-{{ trackID }}">
+    <input type="number" min="0" id="quantity-{{ trackID }}" formControlName="quantity">
+    <span>件</span>
+  </label>
+</ng-container>

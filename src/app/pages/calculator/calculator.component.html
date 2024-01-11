@@ -1,0 +1,14 @@
+<ul>
+  @for (purchase of shirtPurchases(); track purchase) {
+  <li>
+    <app-shirt-selector trackID="{{ $index }}"
+      (shirtSelectionChange)="updateShirtPurchase($event, purchase)"></app-shirt-selector>
+    <button type="button" (click)="addShirtPurchase($index)">+</button>
+    <button type="button" (click)="removeShirtPurchase($index)" [disabled]="shirtPurchases().length === 1">-</button>
+  </li>
+  }
+</ul>
+
+<pre>
+  total amount: {{ totalAmount() }}
+</pre>
