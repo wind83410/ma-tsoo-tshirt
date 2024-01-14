@@ -1,14 +1,48 @@
-<ul>
-  @for (purchase of shirtPurchases(); track purchase) {
-  <li>
-    <app-shirt-selector trackID="{{ $index }}"
-      (shirtSelectionChange)="updateShirtPurchase($event, purchase)"></app-shirt-selector>
-    <button type="button" (click)="addShirtPurchase($index)">+</button>
-    <button type="button" (click)="removeShirtPurchase($index)" [disabled]="shirtPurchases().length === 1">-</button>
-  </li>
-  }
-</ul>
-
-<pre>
-  total amount: {{ totalAmount() }}
-</pre>
+<h1 class="title">
+  <div class="container">
+    媽祖客製 T 簡易計算機
+  </div>
+</h1>
+<main>
+  <div class="container">
+    <article class="decription">
+      計算方式如下：
+      <ul>
+        <li>各尺寸價格：S ~ XL，新台幣 1100 元；2XL 以上統一為新台幣 1300 元。</li>
+        <li>不論尺寸，總數滿三件就免運費；不滿三件則收新台幣 90 元運費。</li>
+      </ul>
+    </article>
+    <div class="total-amount">
+      <div class="container">
+        <ul class="amount-list">
+          <li class="amount">
+            <span class="amount__title">衣服金額</span>
+            <span class="amount__value amount__value--low-key">{{ totalPricesForShirts() }}</span>
+          </li>
+          <li class="amount">
+            <span class="amount__title">運費</span>
+            <span class="amount__value amount__value--low-key">{{ deliveryFee() }}</span>
+          </li>
+          <li class="amount amount--total">
+            <span class="amount__title">總金額</span>
+            <span class="amount__value">{{ totalAmount() }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <ul class="shirt-purchase-list">
+      @for (purchase of shirtPurchases(); track purchase) {
+      <li class="shirt-purchase-list__item">
+        <app-shirt-selector trackID="{{ $index }}" class="shirt-purchase-list__item-selector"
+          (shirtSelectionChange)="updateShirtPurchase($event, purchase)"></app-shirt-selector>
+        <button type="button" (click)="addShirtPurchase($index)">
+          <span class="material-symbols-outlined">add</span>
+        </button>
+        <button type="button" (click)="removeShirtPurchase($index)" [disabled]="shirtPurchases().length === 1">
+          <span class="material-symbols-outlined">remove</span>
+        </button>
+      </li>
+      }
+    </ul>
+  </div>
+</main>

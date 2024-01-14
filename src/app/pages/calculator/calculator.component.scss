@@ -1,0 +1,97 @@
+/******
+ * Reusable styles
+ ******/
+
+button {
+  padding: 0.25rem;
+  display: inline-flex;
+
+  &:disabled {
+    opacity: 0.2;
+  }
+}
+
+.container {
+  max-width: 500px;
+  padding: 0 1rem;
+  margin: 0 auto;
+}
+
+/******
+ * General Styles
+ ******/
+
+:host {
+  line-height: 1.2;
+}
+
+.title {
+  padding: 1rem 0;
+  font-size: 1.75rem;
+}
+
+.decription {
+  padding: 1rem;
+  border: 1px solid #c21717;
+  color: #c21717;
+  border-radius: 0.75rem;
+
+  ul {
+    margin-top: 0.75rem;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem
+  }
+}
+
+.total-amount {
+  margin-top: 2rem;
+}
+
+.amount-list {
+  display: flex;
+  column-gap: 1rem;
+}
+
+.amount {
+  flex: 1;
+  text-align: center;
+
+  &__title {
+    font-size: 0.875rem;
+  }
+
+  &__value {
+    display: block;
+    font-size: 2rem;
+    &--low-key {
+      color: rgba(75, 70, 70, 0.541)
+    }
+    @media (min-width: 768px) {
+      font-size: 3rem;
+    }
+  }
+}
+
+.shirt-purchase-list {
+  display: grid;
+  row-gap: 0.5rem;
+  margin-top: 1.5rem;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__item-selector {
+    margin-right: 1.5rem;
+    flex: 1;
+
+    @media (min-width: 768px) {
+      flex: 0 1 auto;
+    }
+  }
+}

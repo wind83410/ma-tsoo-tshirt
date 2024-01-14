@@ -1,4 +1,4 @@
-import { Component, Signal, WritableSignal, computed, signal } from '@angular/core';
+import { Component, WritableSignal, computed, signal } from '@angular/core';
 import { ShirtPurchase } from '../../models/shirt.model';
 import { ShirtSelectorComponent } from '../../components/shirt-selector/shirt-selector.component';
 
@@ -15,7 +15,13 @@ export class CalculatorComponent {
     { sizePrice: 1100, quantity: 0 }
   ]);
 
-  totalAmount = computed(() => this.calculateTotalAmount(this.shirtPurchases()));
+  totalNumberOfShirts = computed(() => this.calculateTotalNumberOfShirts(this.shirtPurchases()));
+  totalPricesForShirts = computed(() => this.calculateTotalAmountForShirtsOnly(this.shirtPurchases()));
+  deliveryFee = computed(() => {
+    const numberOfShirts = this.totalNumberOfShirts();
+    return numberOfShirts > 0 && numberOfShirts < 3 ? 90 : 0
+  })
+  totalAmount = computed(() => this.totalPricesForShirts() + this.deliveryFee());
 
   constructor(
   ) {
@@ -44,16 +50,19 @@ export class CalculatorComponent {
     return { sizePrice: 1100, quantity: 0 }
   }
 
-  private calculateTotalAmount(purchases: ShirtPurchase[]): number {
-    const { priceOfAllShirts, totalNumberOfShirts } = purchases.reduce<{ priceOfAllShirts: number; totalNumberOfShirts: number }>((acc, onePurchase) => {
-      const { quantity, sizePrice } = onePurchase
-      acc.priceOfAllShirts += quantity * sizePrice;
-      acc.totalNumberOfShirts += quantity
+  private calculateTotalNumberOfShirts(purchases: ShirtPurchase[]): number {
+    return purchases.reduce<number>((acc, purchase) => {
+      const { quantity } = purchase;
+      acc += quantity;
       return acc
-    }, {
-      priceOfAllShirts: 0,
-      totalNumberOfShirts: 0
-    });
-    return priceOfAllShirts + (totalNumberOfShirts > 3 || totalNumberOfShirts === 0 ? 0 : 90);
+    }, 0);
+  }
+
+  private calculateTotalAmountForShirtsOnly(purchases: ShirtPurchase[]): number {
+    return purchases.reduce<number>((acc, purchase) => {
+      const { quantity, sizePrice } = purchase
+      acc += quantity * sizePrice;
+      return acc
+    }, 0);
   }
 }
