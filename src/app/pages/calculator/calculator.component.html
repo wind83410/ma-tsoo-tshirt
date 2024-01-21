@@ -8,7 +8,7 @@
     <article class="decription">
       計算方式如下：
       <ul>
-        <li>各尺寸價格：S ~ XL，新台幣 1100 元；2XL 以上統一為新台幣 1300 元。</li>
+        <li>各尺寸價格：XS ~ XL，新台幣 1100 元；2XL 以上統一為新台幣 1300 元。</li>
         <li>不論尺寸，總數滿三件就免運費；不滿三件則收新台幣 90 元運費。</li>
       </ul>
     </article>
@@ -33,7 +33,8 @@
     <ul class="shirt-purchase-list">
       @for (purchase of shirtPurchases(); track purchase) {
       <li class="shirt-purchase-list__item">
-        <app-shirt-selector trackID="{{ $index }}" class="shirt-purchase-list__item-selector"
+        <app-shirt-selector trackID="{{ $index }}" class="shirt-purchase-list__item-selector" [size]="purchase.size"
+          [quantity]="purchase.quantity"
           (shirtSelectionChange)="updateShirtPurchase($event, purchase)"></app-shirt-selector>
         <button type="button" (click)="addShirtPurchase($index)">
           <span class="material-symbols-outlined">add</span>

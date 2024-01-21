@@ -1,6 +1,8 @@
 import { Component, WritableSignal, computed, signal } from '@angular/core';
-import { ShirtPurchase } from '../../models/shirt.model';
+import { ShirtPurchase, ShirtSizes } from '../../models/shirt.model';
 import { ShirtSelectorComponent } from '../../components/shirt-selector/shirt-selector.component';
+import { ActivatedRoute } from '@angular/router';
+import { SHIRT_SIZE_PRICES } from '../../constants/shirt-price.constant';
 
 @Component({
   selector: 'app-calculator',
@@ -11,9 +13,7 @@ import { ShirtSelectorComponent } from '../../components/shirt-selector/shirt-se
 })
 export class CalculatorComponent {
 
-  shirtPurchases: WritableSignal<ShirtPurchase[]> = signal([
-    { sizePrice: 1100, quantity: 0 }
-  ]);
+  shirtPurchases: WritableSignal<ShirtPurchase[]> = signal<ShirtPurchase[]>([]);
 
   totalNumberOfShirts = computed(() => this.calculateTotalNumberOfShirts(this.shirtPurchases()));
   totalPricesForShirts = computed(() => this.calculateTotalAmountForShirtsOnly(this.shirtPurchases()));
@@ -24,8 +24,15 @@ export class CalculatorComponent {
   totalAmount = computed(() => this.totalPricesForShirts() + this.deliveryFee());
 
   constructor(
+    private route: ActivatedRoute
   ) {
     return;
+  }
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.initializeShirtPurchases();
   }
 
   updateShirtPurchase(newValue: ShirtPurchase, currentValue: ShirtPurchase): void {
@@ -46,8 +53,32 @@ export class CalculatorComponent {
     this.shirtPurchases.set([...array]);
   }
 
+  private extractShirtQuantityFromRoute(): ShirtPurchase[] {
+    const queries = this.route.snapshot.queryParams;
+    const shirtSizeArray: ShirtSizes[] = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+    return shirtSizeArray.reduce<ShirtPurchase[]>((acc, size) => {
+      if (size in queries && !Number.isNaN(parseInt(queries[size]))) {
+        acc.push({
+          size,
+          sizePrice: SHIRT_SIZE_PRICES[size],
+          quantity: parseInt(queries[size])
+        })
+      }
+      return acc
+    }, [])
+  }
+
+  private initializeShirtPurchases(): void {
+    const shirtPurchases = this.extractShirtQuantityFromRoute();
+    if (shirtPurchases.length === 0) {
+      this.shirtPurchases.set([this.generateNewShirtPurchase()]);
+      return;
+    }
+    this.shirtPurchases.set(shirtPurchases);
+  }
+
   private generateNewShirtPurchase(): ShirtPurchase {
-    return { sizePrice: 1100, quantity: 0 }
+    return { size: 'S', sizePrice: 1100, quantity: 0 }
   }
 
   private calculateTotalNumberOfShirts(purchases: ShirtPurchase[]): number {
